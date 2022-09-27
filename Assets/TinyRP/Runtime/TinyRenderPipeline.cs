@@ -4,17 +4,19 @@ using UnityEngine.Rendering;
 
 public class TinyRenderPipeline : RenderPipeline
 {
-    private CameraRenderer _mRenderer = new CameraRenderer();
-
-    public TinyRenderPipeline()
+    private CameraRenderer _renderer = new CameraRenderer();
+    bool _useDynamicBatching, _useGPUInstancing;
+    public TinyRenderPipeline(bool useDynamicBatching, bool useGPUInstancing, bool useSRPBatcher)
     {
-        GraphicsSettings.useScriptableRenderPipelineBatching = true;
+        _useDynamicBatching = useDynamicBatching;
+        _useGPUInstancing = useGPUInstancing;
+        GraphicsSettings.useScriptableRenderPipelineBatching = useSRPBatcher;
     }
     protected override void Render(ScriptableRenderContext context, Camera[] cameras)
     {
         foreach (Camera camera in cameras)
         {
-            _mRenderer.Render(context, camera);
+            _renderer.Render(context, camera, _useDynamicBatching, _useGPUInstancing);
         }
     }
 }

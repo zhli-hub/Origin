@@ -9,7 +9,7 @@ public partial class CameraRenderer
     private readonly CommandBuffer _commandBuffer = new CommandBuffer { name = MCommandBufferName };
     private CullingResults _mCullingResults;
     private static readonly ShaderTagId MUnlitShaderTagId = new ShaderTagId("SRPDefaultUnlit");
-    public void Render (ScriptableRenderContext context, Camera camera) {
+    public void Render (ScriptableRenderContext context, Camera camera, bool useDynamicBatching, bool useGPUInstancing) {
         _context = context;
         _camera = camera;
         PrepareBuffer();
@@ -20,18 +20,22 @@ public partial class CameraRenderer
         }
  
         Setup();
-        DrawVisibleGeometry();
+        DrawVisibleGeometry(useDynamicBatching, useGPUInstancing);
         DrawUnsupportedShaders();
         DrawGizmos();
         Submit();
     }
-    void DrawVisibleGeometry()
+    void DrawVisibleGeometry(bool useDynamicBatching, bool useGPUInstancing)
     {
         var sortingSettings = new SortingSettings(_camera)
         {
             criteria = SortingCriteria.CommonOpaque
         };
-        var drawingSettings = new DrawingSettings(MUnlitShaderTagId, sortingSettings);
+        var drawingSettings = new DrawingSettings(MUnlitShaderTagId, sortingSettings)
+        {
+            enableDynamicBatching = useDynamicBatching,
+            enableInstancing = useGPUInstancing
+        };
         var filteringSettings = new FilteringSettings(RenderQueueRange.opaque);
         _context.DrawRenderers(
             _mCullingResults, ref drawingSettings, ref filteringSettings

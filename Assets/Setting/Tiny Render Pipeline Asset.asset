@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 740f88e3864364e4fa55ab786bfcf438, type: 3}
   m_Name: Tiny Render Pipeline Asset
   m_EditorClassIdentifier: 
+  _useDynamicBatching: 0
+  _useGPUInstancing: 1
+  _useSRPBatcher: 1
